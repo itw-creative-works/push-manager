@@ -1,0 +1,23 @@
+{
+  "name": "web-manager",
+  "version": "1.0.0",
+  "description": "Easily send notifications on Firebase using FCM and Firestore!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itw-creative-works/push-manager.git"
+  },
+  "keywords": [
+    "library"
+  ],
+  "author": "ITW Creative Works",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itw-creative-works/push-manager/issues"
+  },
+  "homepage": "https://itwcreativeworks.com",
+  "dependencies": {}
+}
