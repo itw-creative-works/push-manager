@@ -29,10 +29,8 @@ function PushManager() {
 /**
 * METHODS
 */
-PushManager.prototype.process = async function(admin, snap, context) {
+PushManager.prototype.process = async function(admin, snap, context, options) {
 
-  // Get an object representing the document
-  // e.g. {'name': 'Marie', 'age': 66}
   const data = snap.data();
   let This = this;
   this.admin = admin;
@@ -55,7 +53,7 @@ PushManager.prototype.process = async function(admin, snap, context) {
   let batchPromises = [];
   let batchLoops = 1;
 
-  await admin.firestore().collection('notifications/subscriptions/list/')
+  await admin.firestore().collection('notifications/subscriptions/all/')
     // .where('capital', '==', true)
     .get()
     .then(function(querySnapshot) {
@@ -169,7 +167,7 @@ async function cleanTokens(This, tokens, results, batchNumber) {
 }
 
 async function deleteBadToken(This, token) {
-  return This.admin.firestore().doc('notifications/subscriptions/list/' + token).delete()
+  return This.admin.firestore().doc('notifications/subscriptions/all/' + token).delete()
     .then(function() {
       // console.log('Deleted token ' + tokens[i]);
     })
