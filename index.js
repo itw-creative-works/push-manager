@@ -41,7 +41,7 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
       title: data.payload.title,
       body: data.payload.body,
       icon: data.payload.icon,
-      click_action: data.payload.click_action
+      click_action: data.payload.click_action,
     }
   };
   options = options || {};
