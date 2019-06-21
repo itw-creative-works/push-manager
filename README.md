@@ -1,7 +1,7 @@
 
 <div align="center">
-  <a href="https://cdn.itwcreativeworks.com/assets/itw-creative-works/images/logo/itw-creative-works-banner.svg">
-    <img width="200" height="200" src="https://cdn.itwcreativeworks.com/assets/itw-creative-works/images/logo/itw-creative-works-banner.svg">
+  <a href="https://cdn.itwcreativeworks.com/assets/itw-creative-works/images/logo/itw-creative-works-banner.svg?cb=134">
+    <img width="200" height="200" src="https://cdn.itwcreativeworks.com/assets/itw-creative-works/images/logo/itw-creative-works-banner.svg?cb=234">
   </a>
   <br>
   <br>
