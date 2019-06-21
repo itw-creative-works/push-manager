@@ -44,6 +44,10 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
       click_action: data.payload.click_action
     }
   };
+  options = options || {};
+  this.options = options;
+  this.options.processingPath = options.processingPath || 'notifications/processing/all/{notificationId}';
+  this.options.subscriptionsPath = options.subscriptionsPath || 'notifications/subscriptions/all';
 
   This.result.notification = data;
 
@@ -53,7 +57,8 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
   let batchPromises = [];
   let batchLoops = 1;
 
-  await admin.firestore().collection('notifications/subscriptions/all/')
+  // await admin.firestore().collection('notifications/subscriptions/all/')
+  await admin.firestore().collection(this.options.subscriptionsPath)
     // .where('capital', '==', true)
     .get()
     .then(function(querySnapshot) {
@@ -167,7 +172,8 @@ async function cleanTokens(This, tokens, results, batchNumber) {
 }
 
 async function deleteBadToken(This, token) {
-  return This.admin.firestore().doc('notifications/subscriptions/all/' + token).delete()
+  // return This.admin.firestore().doc('notifications/subscriptions/all/' + token).delete()
+  return This.admin.firestore().doc(This.options.subscriptionsPath + '/' + token).delete()
     .then(function() {
       // console.log('Deleted token ' + tokens[i]);
     })
