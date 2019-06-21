@@ -8,6 +8,8 @@
 
   <img width="200" height="200" src="https://cdn.itwcreativeworks.com/assets/itw-creative-works/images/logo/itw-creative-works-banner.svg?cb=234">
   <img src="https://cdn.itwcreativeworks.com/assets/itw-creative-works/images/logo/itw-creative-works-banner.svg?cb=234">
+  <img src="https://cdn.itwcreativeworks.com/assets/itw-creative-works/images/logo/icon-square-big.svg">
+  
   <img src="https://webpack.js.org/assets/icon-square-big.svg">
 
 
