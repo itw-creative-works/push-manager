@@ -95,7 +95,8 @@ firebase.firestore().collection('notifications/processing/list') // Feel free to
   });
 ```
 
+Note: The document saved must follow the above format, i.e. have a `map` type field called `payload` with the following child text fields: `icon`, `click_action`, `title`, and `body`.
+
 ## Final Words
 If you are still having difficulty, we would love for you to post
 a question to [the Push Manager issues page](https://github.com/itw-creative-works/push-manager/issues). It is much easier to answer questions that include your code and relevant files! So if you can provide them, we'd be extremely grateful (and more likely to help you find the answer!)
-
