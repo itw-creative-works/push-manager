@@ -1,4 +1,3 @@
-
 function PushManager() {
   /**
   * OPTIONS
