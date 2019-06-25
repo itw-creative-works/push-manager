@@ -24,7 +24,6 @@
 **Push Manager** is an NPM module that instantly implements Firebase push notifications in your Firebase project. It's main purpose is to simplify the process of storing tokens and sending the actual notifications to your users.
 </div>
 
-<div>
 ## Install
 Install with npm:
 ```
@@ -99,5 +98,3 @@ firebase.firestore().collection('notifications/processing/list') // Feel free to
 ## Final Words
 If you are still having difficulty, we would love for you to post
 a question to [the Push Manager issues page](https://github.com/itw-creative-works/push-manager/issues). It is much easier to answer questions that include your code and relevant files! So if you can provide them, we'd be extremely grateful (and more likely to help you find the answer!)
-
-</div>
