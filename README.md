@@ -71,9 +71,14 @@ exports.processNotification = functions
 });
 ```
 
+## Options
+* `processingPath`: Path where you store notification payloads
+* `subscriptionsPath`: Path where you store your tokens
+
 ## Trigger a Notification
 Push notifications are triggered by adding a Firestore document to your configured `path`. In the example above, the `path` is set to `notifications/processing/all/{notificationId}`, but you can change this to anything you want.
-This module does not help you trigger a notification, so this is something you must do yourself. You can easily send a test notification by using the following code (client side, such as your website):
+
+This module does not help you trigger a notification (since this module is built for the server side), so this is something you must do yourself. You can easily send a test notification by using the following code (client side, such as your website):
 ```
 firebase.firestore().collection('notifications/processing/list') // Feel free to change the path but make sure to keep it consistent!
   .add(
@@ -90,10 +95,6 @@ firebase.firestore().collection('notifications/processing/list') // Feel free to
     console.error('Failed to set Firestore doc:', e);
   });
 ```
-
-## Options
-* `processingPath`: Path where you store notification payloads
-* `subscriptionsPath`: Path where you store your tokens
 
 ## Final Words
 If you are still having difficulty, we would love for you to post
