@@ -40,7 +40,7 @@ npm install push-manager
 
 
 ## Example
-Open up your local project for your Firebase Functions and paste this code:
+Open up your local project for your Firebase Functions and paste this code. You can skip this step if you already have this part setup.
 ```
 // Standard Firebase Functions code
 const functions = require('firebase-functions');
@@ -50,6 +50,10 @@ admin.initializeApp({
   // ...
 });
 
+```
+
+Next, lets add the code to process the notifications as they come in. This function is triggered when a document is added to the path you specify.
+```
 // Push Manager code
 exports.processNotification = functions
 .firestore
@@ -70,14 +74,33 @@ exports.processNotification = functions
 });
 ```
 
-## Options
+### Options
 * `processingPath`: Path where you store notification payloads
 * `subscriptionsPath`: Path where you store your tokens
 
 ## Trigger a Notification
 Push notifications are triggered by adding a Firestore document to your configured `path`. In the example above, the `path` is set to `notifications/processing/all/{notificationId}`, but you can change this to anything you want.
 
-This module does not help you trigger a notification (since this module is built for the server side), so this is something you must do yourself. You can easily send a test notification by using the following code (client side, such as your website):
+This module does not help you trigger a notification (since this module is built for the server side), so this is something you must do yourself. You can easily send a test notification by using the following code.
+
+First, lets add the Firebase SDKs and configure the app. You can skip this step if you already have this part setup.
+```
+// Setting up Firebase instructions: https://firebase.google.com/docs/web/setup
+<script defer src="https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/6.2.3/firebase-auth.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/6.2.3/firebase-firestore.js"></script>
+
+// TODO: Replace the following with your app's Firebase project configuration
+var firebaseConfig = {
+  // ...
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+```
+
+Next, lets trigger a notification by adding a new document to the `notifications/processing/list` collection.
 ```
 firebase.firestore().collection('notifications/processing/list') // Feel free to change the path but make sure to keep it consistent!
   .add(
