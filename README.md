@@ -27,7 +27,6 @@
 ## Install
 Install with npm:
 ```
-bash
 npm install push-manager
 ```
 
