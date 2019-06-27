@@ -122,3 +122,12 @@ Note: The document saved must follow the above format, i.e. have a `map` type fi
 ## Final Words
 If you are still having difficulty, we would love for you to post
 a question to [the Push Manager issues page](https://github.com/itw-creative-works/push-manager/issues). It is much easier to answer questions that include your code and relevant files! So if you can provide them, we'd be extremely grateful (and more likely to help you find the answer!)
+
+## Projects Using this Library
+[Somiibo](https://somiibo.com/): A Social Media Bot with an open-source module library.
+[JekyllUp](https://jekyllup.com/): A website devoted to sharing the best Jekyll themes.
+[Slapform](https://slapform.com/): A backend processor for your HTML forms on static sites.
+[SoundGrail Music App](https://app.soundgrail.com/): A resource for producers, musicians, and DJs.
+[Hammock Report](https://hammockreport.com/): An API for exploring and listing backyard products.
+
+Ask us to have your project listed! :)
