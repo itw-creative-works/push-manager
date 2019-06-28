@@ -1,6 +1,6 @@
 {
   "name": "push-manager",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Easily send notifications on Firebase using FCM and Firestore!",
   "main": "index.js",
   "scripts": {
