@@ -1,6 +1,6 @@
 {
   "name": "push-manager",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Easily send notifications on Firebase using FCM and Firestore!",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,11 @@
     "url": "git+https://github.com/itw-creative-works/push-manager.git"
   },
   "keywords": [
-    "library"
+    "library",
+    "push notifications",
+    "firebase",
+    "firebase messaging",
+    "backend"
   ],
   "author": "ITW Creative Works",
   "license": "CC-BY-4.0",

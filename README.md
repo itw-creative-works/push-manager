@@ -48,7 +48,7 @@ To get this module to work we must accomplish 3 things:
 * Add a document to Firestore to trigger the sending of the notification.
 
 ### 1. Listen for new Notifications
-Open up your local project for your Firebase Functions and add a function to process the notifications as they come in called `processNotification`.
+Open up your local project for your Firebase Functions and add a function called `processNotification` to process the notification payloads as they come in.
 
 This function is triggered when a document is added to the path you specify. In this case the path is `notifications/processing/all/{notificationId}`.
 ```js
@@ -113,7 +113,7 @@ The Firestore documents for both the *tokens* and the *notifications* can have o
 * `processingPath`: Path where you store notification payloads
 * `subscriptionsPath`: Path where you store your tokens -->
 
-If this was confusing or you would rather see a fully functional example with Firebase functions code and client-side subscriptions, please fork [https://github.com/itw-creative-works/push-manager-example](https://github.com/itw-creative-works/push-manager-example).
+If this was confusing or you would rather see a fully functional example with Firebase functions code and client-side subscriptions, please fork [https://github.com/itw-creative-works/push-manager-example](https://github.com/itw-creative-works/push-manager-example) and view the README for a detailed walkthrough that will get you up and running with Push Manager in 5 minutes!
 
 ## Final Words
 If you are still having difficulty, we would love for you to post
