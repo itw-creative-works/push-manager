@@ -11,7 +11,7 @@
 ![David](https://img.shields.io/david/dev/itw-creative-works/push-manager.svg) <!-- ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/itw-creative-works/push-manager.svg) -->
 ![npm bundle size](https://img.shields.io/bundlephobia/min/push-manager.svg)
 ![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability-percentage/itw-creative-works/push-manager.svg)
-![npm](https://img.shields.io/npm/dm/push-manager.svg)
+![npm](https://img.shields.io/npm/dm/push-manager.svg) <!-- [![NPM total downloads](https://img.shields.io/npm/dt/push-manager.svg?style=flat)](https://npmjs.org/package/push-manager) -->
 ![node](https://img.shields.io/node/v/push-manager.svg)
 ![Website](https://img.shields.io/website/https/itwcreativeworks.com.svg)
 ![GitHub](https://img.shields.io/github/license/itw-creative-works/push-manager.svg)
