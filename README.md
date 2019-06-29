@@ -39,10 +39,20 @@ npm install push-manager
 * Configure your own path in Firestore where notifications are stored and triggered from.
 * No dependencies or dev dependencies.
 
+If you would rather start by seeing a full example, please clone [https://github.com/itw-creative-works/push-manager-example](https://github.com/itw-creative-works/push-manager-example) and follow the README in that repo for detailed instructions on how to set up Push Manager in 5 minutes!
 
-## Example
-Open up your local project for your Firebase Functions and paste this code. You can skip this step if you already have this part set up.
+## Implement Push Manager
+To get this module to work we must accomplish 3 things:
+* Set up a listener function in Firebase functions.
+* Subscribe the client to your notifications.
+* Add a document to Firestore to trigger the sending of the notification.
+
+### 1. Listen for new Notifications
+Open up your local project for your Firebase Functions and add a function to process the notifications as they come in called `processNotification`.
+
+This function is triggered when a document is added to the path you specify. In this case the path is `notifications/processing/all/{notificationId}`.
 ```js
+// /<your-firebase-project>/functions/index.js
 // Standard Firebase Functions code
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
@@ -51,10 +61,6 @@ admin.initializeApp({
   // ...
 });
 
-```
-
-Next, lets add the code to process the notifications as they come in. This function is triggered when a document is added to the path you specify.
-```js
 // Push Manager code
 exports.processNotification = functions
 .firestore
@@ -75,52 +81,39 @@ exports.processNotification = functions
 });
 ```
 
+That's it for the server side code!
+
+To get this to work, however, you still must subscribe the user's browser to the push notifications as well as add a document to your Firebase Function trigger path, `notifications/processing/all/{notificationId}`.
+
+#### Firestore Document Structure for Tokens
+This is the required format for the subscription document in Firestore. Here, the `token` is stored so Firebase knows *where* to send the notifications.
+If you are not sure how to subscribe a user to Firebase push notifications, keep reading.
+```js
+// notifications/subscriptions/all/{subscriptionId}
+{
+  token: 'tokenId',
+}
+```
+
+#### Firestore Document Structure for Notifications
+This is the required format for the notification document in Firestore. Here, the notification `payload` is stored so Firebase knows *what* to send in the notifications.
+```js
+// notifications/processing/all/{notificationId}
+payload: {
+  icon: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg', // Link to notification icon
+  click_action: 'https://google.com', // URL click action
+  title: 'Hello world!',
+  body: 'This is my first push notification using Push Manager!',
+}
+```
+
+The Firestore documents for both the *tokens* and the *notifications* can have other data, but both must *at least* have the above data for push-manager to work properly.
+<!--
 ### Options
 * `processingPath`: Path where you store notification payloads
-* `subscriptionsPath`: Path where you store your tokens
+* `subscriptionsPath`: Path where you store your tokens -->
 
-## Trigger a Notification
-Push notifications are triggered by adding a Firestore document to your configured `path`. In the example above, the `path` is set to `notifications/processing/all/{notificationId}`, but you can change this to anything you want.
-
-This module does not help you trigger a notification (since this module is built for the server side), so this is something you must do yourself. You can easily send a test notification by using the following code.
-
-First, lets add the Firebase SDKs and configure the app. You can skip this step if you already have this part set up.
-```html
-// Setting up Firebase instructions: https://firebase.google.com/docs/web/setup
-<script defer src="https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js"></script>
-<script defer src="https://www.gstatic.com/firebasejs/6.2.3/firebase-auth.js"></script>
-<script defer src="https://www.gstatic.com/firebasejs/6.2.3/firebase-firestore.js"></script>
-
-<script type="text/javascript">
-  // TODO: Replace the following with your app's Firebase project configuration
-  var firebaseConfig = {
-    // ...
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-</script>
-```
-
-Next, lets trigger a notification by adding a new document to the `notifications/processing/list` collection.
-```js
-firebase.firestore().collection('notifications/processing/list') // Feel free to change the path but make sure to keep it consistent!
-  .add(
-    {
-      payload: {
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg', // Link to notification icon
-        click_action: 'https://google.com', // URL click action
-        title: 'Hello world!',
-        body: 'This is my first push notification using Push Manager!',
-      },
-    }
-  )
-  .catch(function(e) {
-    console.error('Failed to set Firestore doc:', e);
-  });
-```
-
-Note: The document saved must follow the above format, i.e. have a `map` type field called `payload` with the following child text fields: `icon`, `click_action`, `title`, and `body`.
+If this was confusing or you would rather see a fully functional example with Firebase functions code and client-side subscriptions, please fork [https://github.com/itw-creative-works/push-manager-example](https://github.com/itw-creative-works/push-manager-example).
 
 ## Final Words
 If you are still having difficulty, we would love for you to post

@@ -66,10 +66,10 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
       querySnapshot.forEach(function(doc) {
         // console.log('loading... ', batchLoops+'/'+querySnapshot.size);
         if ((batchCurrentSize < batchSizeMax - 1) && (batchLoops < querySnapshot.size)) {
-          batchCurrent.push(doc.data().meta.token);
+          batchCurrent.push(doc.data().token);
           batchCurrentSize++;
         } else {
-          batchCurrent.push(doc.data().meta.token);
+          batchCurrent.push(doc.data().token);
           batchPromises.push(This.sendBatch(batchCurrent, batchPromises.length + 1));
           batchCurrent = [];
           batchCurrentSize = 0;
