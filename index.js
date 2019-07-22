@@ -1,3 +1,5 @@
+var log = function () {};
+
 function PushManager() {
   /**
   * OPTIONS
@@ -47,6 +49,13 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
   this.options = options;
   this.options.processingPath = options.processingPath || 'notifications/processing/all/{notificationId}';
   this.options.subscriptionsPath = options.subscriptionsPath || 'notifications/subscriptions/all';
+  this.options.log = (typeof options.log !== 'undefined') ? options.log : false;
+
+  if (this.options.log === true) {
+    log = function (msg) {
+      console.log('[Push Manager DEV]', msg);
+    }
+  }
 
   This.result.notification = data;
 
@@ -149,12 +158,16 @@ async function cleanTokens(This, tokens, results, batchNumber) {
   results.forEach(async (result, i) => {
     if (!result.error) { return false; }
     if (result.error.code == 'messaging/invalid-registration-token') {
+      log('Bad token: ' + tokens[i]);
       This.result.badTokens.invalid += 1;
       cleanPromises.push(deleteBadToken(This, tokens[i]));
     } else if (result.error.code == 'messaging/registration-token-not-registered') {
+      log('Bad token: ' + tokens[i]);
       This.result.badTokens.notRegistered += 1;
       cleanPromises.push(deleteBadToken(This, tokens[i]));
     } else {
+      log('Bad token: ' + tokens[i]);
+      cleanPromises.push(deleteBadToken(This, tokens[i]));
       This.result.badTokens.other.push(result.error.code);
     }
   });
@@ -174,13 +187,15 @@ async function deleteBadToken(This, token) {
   // return This.admin.firestore().doc('notifications/subscriptions/all/' + token).delete()
   return This.admin.firestore().doc(This.options.subscriptionsPath + '/' + token).delete()
     .then(function() {
-      // console.log('Deleted token ' + tokens[i]);
+      log('Deleted token: ' + tokens[i]);
     })
     .catch(function(error) {
       console.error('Error removing token: ', error);
       This.result.status = 'fail';
     })
 }
+
+
 
 
 /**
