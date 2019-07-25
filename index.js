@@ -164,21 +164,23 @@ PushManager.prototype.sendBatch = async function(batch, batchNumber) {
   })
 }
 
+
+
 async function cleanTokens(This, tokens, results, batchNumber) {
   let cleanPromises = [];
   log('Started cleaning tokens for batch #' + batchNumber);
   results.forEach(async (result, i) => {
     if (!result.error) { return false; }
     if (result.error.code == 'messaging/invalid-registration-token') {
-      log(This, 'Bad token: ' + tokens[i]);
+      // log(This, 'Bad token: ' + tokens[i]);
       This.result.badTokens.invalid += 1;
       cleanPromises.push(deleteBadToken(This, tokens[i]));
     } else if (result.error.code == 'messaging/registration-token-not-registered') {
-      log(This, 'Bad token: ' + tokens[i]);
+      // log(This, 'Bad token: ' + tokens[i]);
       This.result.badTokens.notRegistered += 1;
       cleanPromises.push(deleteBadToken(This, tokens[i]));
     } else {
-      log(This, 'Bad token: ' + tokens[i]);
+      // log(This, 'Bad token: ' + tokens[i]);
       cleanPromises.push(deleteBadToken(This, tokens[i]));
       This.result.badTokens.other.push(result.error.code);
     }
@@ -201,10 +203,10 @@ async function deleteBadToken(This, token) {
   // return This.admin.firestore().doc('notifications/subscriptions/all/' + token).delete()
   return This.admin.firestore().doc(This.options.subscriptionsPath + '/' + token).delete()
     .then(function() {
-      log(This, 'Deleted token: ' + token);
+      log(This, 'Removed bad token: ' + token);
     })
     .catch(function(error) {
-      console.error('Error removing token: ', error);
+      console.error('Error removing token: ', token, error);
       This.result.status = 'fail';
     })
 }
