@@ -23,7 +23,7 @@ function PushManager() {
       invalid: 0,
       notRegistered: 0,
       other: []
-    }
+    },
   };
 }
 
@@ -51,15 +51,27 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
   this.options.subscriptionsPath = options.subscriptionsPath || 'notifications/subscriptions/all';
   this.options.log = (typeof options.log !== 'undefined') ? options.log : false;
 
+  // console.log('@PushManager start...');
+
   if (this.options.log === true) {
-    log = function (msg) {
-      console.log('[Push Manager DEV]', msg);
+    this.result.log = [];
+    log = function (This, msg) {
+      var args = Array.prototype.slice.call(arguments);
+      args = args.splice(1,args.length)
+      args.unshift('[Push Manager DEV]');
+      console.log.apply(console, args);
+      // This.result.log.push(args);
     }
+    var pjson = require('./package.json');
+    log(This, 'Logging enabled on Push Manager version: ' + pjson.version);
+    // console.log('Logging enabled on Push Manager version: ' + pjson.version)
+    // this.result.log.push('Logging enabled on Push Manager version: ' + pjson.version);
+
   }
 
   This.result.notification = data;
 
-  const batchSizeMax = 3;
+  const batchSizeMax = 1000;
   let batchCurrent = [];
   let batchCurrentSize = 0;
   let batchPromises = [];
@@ -71,9 +83,10 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
     .get()
     .then(function(querySnapshot) {
       // console.log('querySnapshot.size', querySnapshot.size);
+      log(This, 'Queried ' + querySnapshot.size + ' tokens to send to.');
       This.result.subscriptionsStart = querySnapshot.size;
       querySnapshot.forEach(function(doc) {
-        // console.log('loading... ', batchLoops+'/'+querySnapshot.size);
+        // log(This, 'loading... ', batchLoops+'/'+querySnapshot.size);
         if ((batchCurrentSize < batchSizeMax - 1) && (batchLoops < querySnapshot.size)) {
           batchCurrent.push(doc.data().token);
           batchCurrentSize++;
@@ -91,10 +104,13 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
     });
 
     This.result.batches.count = batchPromises.length;
+    log(This, 'Total batches = ' + This.result.batches.count);
+
 
     await Promise.all(batchPromises)
       .then(function(values) {
-        This.result.status = 'success';
+        // This.result.status = 'success';
+        log(This, 'Finished all batches.');
       })
       .catch(function(e) {
         console.error("Error sending batches: ", e);
@@ -106,6 +122,8 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
       .delete()
       .then(function() {
         // console.log('Deleted token ' + tokens[i]);
+        log(This, 'Removed notification at ' + snap.ref.path);
+
       }).catch(function(error) {
         console.error('Error removing notification: ', error);
       })
@@ -123,20 +141,13 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
 * HELPERS
 */
 
-// async function iterateNotifications() {
-//
-//
-//   return new Promise((resolve, reject) => {
-//     resolve(true);
-//   })
-// }
-
-// async function sendBatch(batch, batchNumber) {
 PushManager.prototype.sendBatch = async function(batch, batchNumber) {
   let This = this;
+  log(This, 'Sending batch #', batchNumber, batch);
   await This.admin.messaging().sendToDevice(batch, This.payload)
     .then(async function (response) {
-      This.result.batches.list.push('#' + batchNumber + ' | ' + '✅  ' + response.successCount + ' | ' + '❌  ' + response.failureCount)
+      This.result.batches.list.push('#' + batchNumber + ' | ' + '✅  ' + response.successCount + ' | ' + '❌  ' + response.failureCount);
+      log('Sent batch #' + batchNumber);
       This.result.successes += response.successCount;
       This.result.failures += response.failureCount;
       if (response.failureCount > 0) {
@@ -155,18 +166,19 @@ PushManager.prototype.sendBatch = async function(batch, batchNumber) {
 
 async function cleanTokens(This, tokens, results, batchNumber) {
   let cleanPromises = [];
+  log('Started cleaning tokens for batch #' + batchNumber);
   results.forEach(async (result, i) => {
     if (!result.error) { return false; }
     if (result.error.code == 'messaging/invalid-registration-token') {
-      log('Bad token: ' + tokens[i]);
+      log(This, 'Bad token: ' + tokens[i]);
       This.result.badTokens.invalid += 1;
       cleanPromises.push(deleteBadToken(This, tokens[i]));
     } else if (result.error.code == 'messaging/registration-token-not-registered') {
-      log('Bad token: ' + tokens[i]);
+      log(This, 'Bad token: ' + tokens[i]);
       This.result.badTokens.notRegistered += 1;
       cleanPromises.push(deleteBadToken(This, tokens[i]));
     } else {
-      log('Bad token: ' + tokens[i]);
+      log(This, 'Bad token: ' + tokens[i]);
       cleanPromises.push(deleteBadToken(This, tokens[i]));
       This.result.badTokens.other.push(result.error.code);
     }
@@ -178,6 +190,8 @@ async function cleanTokens(This, tokens, results, batchNumber) {
       This.result.status = 'fail';
     });
 
+  log('Finished cleaning tokens for batch #' + batchNumber);
+
   return new Promise((resolve, reject) => {
     resolve(true);
   })
@@ -187,7 +201,7 @@ async function deleteBadToken(This, token) {
   // return This.admin.firestore().doc('notifications/subscriptions/all/' + token).delete()
   return This.admin.firestore().doc(This.options.subscriptionsPath + '/' + token).delete()
     .then(function() {
-      log('Deleted token: ' + tokens[i]);
+      log(This, 'Deleted token: ' + token);
     })
     .catch(function(error) {
       console.error('Error removing token: ', error);
@@ -196,10 +210,7 @@ async function deleteBadToken(This, token) {
 }
 
 
-
-
 /**
 * MODULE EXPORT
 */
-
 module.exports = PushManager;
