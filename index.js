@@ -168,21 +168,21 @@ PushManager.prototype.sendBatch = async function(batch, batchNumber) {
 
 async function cleanTokens(This, tokens, results, batchNumber) {
   let cleanPromises = [];
+  let errorCode = result.error ? result.error.code : '';
   log('Started cleaning tokens for batch #' + batchNumber);
   results.forEach(async (result, i) => {
     if (!result.error) { return false; }
-    if (result.error.code == 'messaging/invalid-registration-token') {
-      // log(This, 'Bad token: ' + tokens[i]);
+    if (errorCode == 'messaging/invalid-registration-token') {
       This.result.badTokens.invalid += 1;
-      cleanPromises.push(deleteBadToken(This, tokens[i]));
-    } else if (result.error.code == 'messaging/registration-token-not-registered') {
-      // log(This, 'Bad token: ' + tokens[i]);
+      cleanPromises.push(deleteBadToken(This, tokens[i], errorCode));
+    } else if (errorCode == 'messaging/registration-token-not-registered') {
       This.result.badTokens.notRegistered += 1;
-      cleanPromises.push(deleteBadToken(This, tokens[i]));
+      cleanPromises.push(deleteBadToken(This, tokens[i], errorCode));
     } else {
-      // log(This, 'Bad token: ' + tokens[i]);
-      cleanPromises.push(deleteBadToken(This, tokens[i]));
-      This.result.badTokens.other.push(result.error.code);
+      log(This, 'Errored token (not removed): ' + tokens[i], ' Reason: ' + errorCode);
+
+      // cleanPromises.push(deleteBadToken(This, tokens[i], errorCode));
+      This.result.badTokens.other.push({token: tokens[i], reason: errorCode});
     }
   });
 
@@ -199,14 +199,14 @@ async function cleanTokens(This, tokens, results, batchNumber) {
   })
 }
 
-async function deleteBadToken(This, token) {
+async function deleteBadToken(This, token, reason) {
   // return This.admin.firestore().doc('notifications/subscriptions/all/' + token).delete()
   return This.admin.firestore().doc(This.options.subscriptionsPath + '/' + token).delete()
     .then(function() {
-      log(This, 'Removed bad token: ' + token);
+      log(This, 'Removed bad token: ' + token, ' Reason: ', reason);
     })
     .catch(function(error) {
-      console.error('Error removing token: ', token, error);
+      console.error('Error removing token: ' + token, ' Reason: ' + reason, ' Error: ' + error);
       This.result.status = 'fail';
     })
 }
