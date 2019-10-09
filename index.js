@@ -32,16 +32,16 @@ function PushManager() {
 * METHODS
 */
 PushManager.prototype.process = async function(admin, snap, context, options) {
-  var parseDELETE = function (req) {
-    var result;
-    try {
-      result = JSON.parse(req.responseText);
-    } catch (e) {
-      result = req.responseText;
-    }
-    return [result, req];
-  };
-
+  // Should this be changed?
+  // var parseDELETE = function (req) {
+  //   var result;
+  //   try {
+  //     result = JSON.parse(req.responseText);
+  //   } catch (e) {
+  //     result = req.responseText;
+  //   }
+  //   return [result, req];
+  // };
 
   const data = snap.data();
   let This = this;
@@ -58,7 +58,7 @@ PushManager.prototype.process = async function(admin, snap, context, options) {
   };
   options = options || {};
   this.options = options;
-  this.extra = '7'; //@@@ Delete later
+  this.extra = '13'; //@@@ Delete later
   this.options.processingPath = options.processingPath || 'notifications/processing/all/{notificationId}';
   this.options.subscriptionsPath = options.subscriptionsPath || 'notifications/subscriptions/all';
   this.options.log = (typeof options.log !== 'undefined') ? options.log : false;
